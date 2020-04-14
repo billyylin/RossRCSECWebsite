@@ -1,0 +1,16 @@
+@import "compass/css3";
+* {
+  box-sizing: border-box;
+}
+
+.manuallist{
+  padding: 7px 5px;
+}
+
+.sub-tab{
+  padding: 30px 0px 0px 0px;
+}
+
+#form_type{
+  height: 260px;
+}

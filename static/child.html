@@ -1,0 +1,822 @@
+{% extends "base.html" %}
+{% block title %}Research Computing SEC Filing Database{% endblock %}
+{% block head %}
+    {{ super() }}
+    <!-- <style type="text/css">
+        .important { color: #336699; }
+    </style> -->
+    <style>
+      @import "compass/css3";
+      $height-footer: 60px;
+
+      * {
+        box-sizing: border-box;
+      }
+    </style>
+
+{% endblock %}
+{% block content %}
+
+    <h1>Index</h1>
+    <p class="important">
+      Welcome to my awesome homepage.
+    </p>
+
+    <ul>
+      {% for item in my_list %}
+          <li>{{item}}</li>
+      {% endfor %}
+    </ul>
+
+
+
+    <header id="header">
+      <div class="media align-items-end">
+        <div class="row col=12 col-md=12">
+        <!-- <a href="index.html"><img class="align-self-start mr-3" src="Rosslogo.png " id="logo" alt="ross logo"></a> -->
+        <a href="index.html"><img class="align-self-start mr-3" src="{{ url_for('static', filename='Rosslogo.png ')}}" id="logo" alt="ross logo"></a>
+      </div>
+        <div class="media-body">
+          <a href="index.html" style="text-decoration : none"><h3 href="index.html">SEC Database</h3></a>
+        </div>
+
+        <form class="form-inline my-2 my-lg-0" id="search">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+
+    </header>
+
+    <section>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page"><a href="#">SEC Filings Index</a></li>
+        </ol>
+      </nav>
+    </section>
+
+    <div class="container" id="content">
+      <div class="row">
+        <div class="col-md-3">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" href="secfiling.html">SEC Filings Index</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="exhibits.html">List of Filings Exhibits</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="eightkitem.html">List of 8K Items</a>
+            </li>
+
+          </ul>
+        </div>
+        <div class="col-md-9">
+
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="queryform-tab" data-toggle="tab" href="#queryform" role="tab" aria-controls="queryform" aria-selected="true">Query Form</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="variabledesc-tab" data-toggle="tab" href="#variabledesc" role="tab" aria-controls="variabledesc" aria-selected="false">Variable Descriptions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="manuals-tab" data-toggle="tab" href="#manuals" role="tab" aria-controls="manuals" aria-selected="false">Manuals and Overviews</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="datasetlist-tab" data-toggle="tab" href="#datasetlist" role="tab" aria-controls="datasetlist" aria-selected="false">Dataset List</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="queryform" role="tabpanel" aria-labelledby="queryform-tab">
+
+              <div class="step">
+                <h4>Step1: Choose your date range.</h4>
+
+                <div class="container">
+                    Start Date: <input id="startDate" width="276" placeholder="mm/dd/yyyy"/>
+                    End Date: <input id="endDate" width="276" placeholder="mm/dd/yyyy"/>
+                </div>
+      <script>
+      var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+      $('#startDate').datepicker({
+          uiLibrary: 'bootstrap4',
+          iconsLibrary: 'fontawesome',
+          // minDate: today,
+          maxDate: today
+      });
+      $('#endDate').datepicker({
+          uiLibrary: 'bootstrap4',
+          iconsLibrary: 'fontawesome',
+          minDate: function () {
+              return $('#startDate').val();
+          }
+        });
+      </script>
+
+      </div>
+
+              <hr>
+
+              <div class="step">
+                <h4>Step2: Apply your company codes.</h4>
+
+                <form action="" id="" class="insidecontent">
+                  <input type="radio" name="companycodetype" value="CIK"  checked> CIK
+                  <input type="radio" name="companycodetype" value="TICKER"> TICKER
+                  <input type="radio" name="companycodetype" value="GVKEY"> GVKEY
+                </form>
+
+                <h5>Select an option for entering company codes</h5>
+                <form action="post">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                          <input type="radio" value="use-company-code" name="enteringcompanycode" aria-label="Radio button for following text input" checked>
+                          </div>
+                        </div>
+                        <input type="text" class="form-control companycode" aria-label="Text input with radio button" placeholder="Enter in Company Codes">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <!-- <p>Save code list to Saved Codes</p> -->
+                            <input type="checkbox" name="codelistname-checkbox" id="codelistname-checkbox" aria-label="Checkbox for following text input">
+                          </div>
+                        </div>
+                        <input type="text" name="code-list-name" id="codelistname-text" class="form-control companycode" aria-label="Text input with checkbox" placeholder="Save Codelist to Saved Codes">
+                      </div>
+                      <script>
+                        // Please Put in Code List Name
+                      </script>
+
+                  <div class="col-md-6">
+                  <p>Please enter Company codes separated by a space. Example: [CIK] 0000040545 0000310158 0000320193, or [TICKER] GE MRK AAPL <a href="search.html">[Code Lookup]</a></p>
+                  </div>
+
+
+                  <script>
+                  $(document).ready(function(){
+                    selected_value = $("input[name='enteringcompnaycode']:checked").val();
+                    $('#enteringcompnaycode').change(function() {
+                        if ($selected_value=='use-company-code') {
+                            $('#codelistname-text').prop('disabled', true);
+                            $('#codelistname-checkbox').prop('disabled',true);
+                        }
+                        else if (selected_value=='choosefile') {
+                            $('#codelistname-text').prop('disabled', false);
+                        }
+                    });
+                  });
+                  </script>
+                  
+                  <div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                      <input type="radio" value="choosefile" name="enteringcompanycode" aria-label="Radio button for following text input">
+                      </div>
+                    </div>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="inputGroupFile01">
+                      <label class="custom-file-label" for="inputGroupFile01">Choose File</label>
+                    </div>
+                  </div>
+                  <p>Upload a plain text file (.txt), having one code per line.</p>
+                </div>
+
+                          <script>
+                                // $('#xxx').attr('disabled', true);
+                          </script>
+
+
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text">
+                              <input type="radio" name="enteringcompanycode" aria-label="Radio button for following text input">
+                              </div>
+                            </div>
+                            <select class="custom-select" id="inputGroupSelect01">
+                              <option selected>Select Saved Codelists</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                            </select>
+                          </div>
+
+                  <div class="input-group-text">
+                  <input type="radio" name="enteringcompanycode" aria-label="Radio button for following text input"> &emsp;&ensp;Select Entire Database
+                  </div>
+                  <p>This method allows you to search the entire database of records. Please be aware that this method can take a very long time to run because it is dependent upon the size of the database.</p>
+
+                </div>
+
+                <hr>
+
+                <div class="step">
+                  <h4>Step3: Query Variables.</h4>
+
+              <!-- Modal -->
+              <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#queryvariablePopup">
+              <a>How does this work?</a>
+              </button>
+
+              <div class="modal fade" id="queryvariablePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">How does this work</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+              <div class="modal-body">
+                The purpose of the variable selector is to make it easier to manage the many variables that you frequently need to navigate in order to make a WRDS Query.
+                To add items
+                Check the item in the list on the left. Alternately, you can just check all of the items with the "Check All" option.
+                To remove items
+                Uncheck the item in the list on the left. Or uncheck the item in the list on the right. Alternately, you can just uncheck all of the items with the "Uncheck All" option.
+              </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+              </div>
+              </div>
+              </div>
+
+                    <div class="queryvariables">
+                      <p>Data Items</p>
+                      <div class="row">
+                        <div class="col-md-6">
+                            <span>Select</span>
+                            <button type="button" class="btn btn-outline-dark btn-sm" id="selectallbtn">Select All</button>
+                            <script>
+
+                            </script>
+                          <hr>
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="searchvariable">
+                              <script>
+
+                              </script>
+                              <div class="list-group" id="mainItem">
+
+                              <a href="javascript:void(0)" class="list-group-item list-group-item-action"><i class='material-icons checkboxicon'>check_box_outline_blank</i>
+                              SEC Central Index Key
+                              </a>
+                              <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Filing Date</a>
+                              <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>SEC Form</a>
+                              <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Company Name</a>
+                              <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Reference Name of Complete Report Filing</a>
+                              <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>First SEC Date with Index Record Information</a>
+                              <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Last SEC Date with Index Record Information</a>
+                              <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Index Source</a>
+                              <!-- <a href="javascript:void(0)" class="list-group-item list-group-item-action disabled"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Vestibulum at eros</a> -->
+
+                              {% for item in main_item_list %}
+                                  <a href="javascript:void(0)" class="list-group-item list-group-item-action"><i class='material-icons checkboxicon'>check_box_outline_blank</i>
+                                    {{ item }}
+                                  </a>
+                              {% endfor %}
+
+                              example codes:
+                              <h1>Members</h1>
+                              <ul>
+                              {% for user in users %}
+                                <li>{{ user.username|e }}</li>
+                              {% endfor %}
+                              </ul>
+                              Note, however, that Python dicts are not ordered;
+                              so you might want to either pass a sorted list of tuple s – or a collections.OrderedDict – to the template, or use the dictsort filter.
+
+
+
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                          <span>Selected</span>
+                          <button type="button" class="btn btn-outline-dark btn-sm" id="clearallbtn">Clear All</button>
+                          <script>
+
+                          </script>
+                        <hr>
+                          <div class="list-group" id="selectedItem">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+                <div>
+                  <h4>Conditional Statement (Optional)</h4>
+                  <div id='conditionalinstruction'>
+                      <!-- Modal -->
+                      <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#conditionalstatementPopup">
+                        <a>How does this work?</a>
+                      </button>
+
+                      <div class="modal fade" id="conditionalstatementPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalCenterTitle">How does this work</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              Build unlimited conditional statements using the list of variables, comparison operators, desired values, and logical operators.
+                              Note that in order for a variable to be selectable in the conditional statement builder, it must first be selected in the Query Variables section.
+                              The data types for each variable are determined automatically, so there is no need to add quotation marks for character variables or apply any special formatting for dates. Also note that character variables are not case sensitive, and a filter for "MICROSOFT" vs. "microsoft" will yield the same results.
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p>No variables are currently selected. To set conditions on this query, please select at least one variable in the Query Variables step.</p>
+                      <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#activateconditional"><a>Activate Conditional Statement Builder</a></button>
+
+                      <div class="modal fade" id="activateconditional" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <!-- <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5> -->
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              No variables are currently selected. To set conditions on this query, please select at least one variable in the Query Variables step.
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                  </div>
+                  <div class="conditionalstatements container" id="whole-conditional-statements-box">
+
+                      <script>
+                    </script>
+
+                    <div class="row justify-content-between conditional-statement-header">
+                      <div class="btn-group btn-group-toggle col-md-5" data-toggle="buttons" id="logic-condition">
+                        <label class="btn btn-sm btn-outline-primary active">
+                          <input type="radio" name="andorlogic" id="andbtn" value="andbtn" autocomplete="off" checked> AND
+                        </label>
+                        <label class="btn btn-sm btn-outline-primary">
+                          <input type="radio" name="andorlogic" id="orbtn" value="orbtn" autocomplete="off"> OR
+                        </label>
+                      </div>
+
+                      <div class="col-md-7" id="remove-add-btns">
+                        <button type="button" class="btn btn-danger btn-sm" id="removeconditionalbtn">Remove Conditional Statement Builder</button>
+                        <button type="button" class="btn btn-success btn-sm add-one-rule-btn">Add Rule</button>
+                        <button type="button" class="btn btn-success btn-sm add-one-group-btn">Add Group</button>
+                      </div>
+                      <script>
+                      </script>
+                    </div>
+
+              <div class="container justify-content-end statement-part" data-draggable = "target">
+
+                      <div class="oneconditionalstatement col-md-12 draggablebox" draggable="true" data-draggable = "item">
+                          <!-- dropdown menu begin -->
+                          <div class="form-inline justify-content-between">
+                          <div class="dropdown col-md-3">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Select the Variable
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="#">Action</a>
+                              <a class="dropdown-item" href="#">Another action</a>
+                              <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                          </div>
+
+                          just some test
+                          {% for item in main_item_list %}
+                            {% if item is hidden %}
+                              <a class="dropdown-item" href="#"> {{ item }} </a>
+                            {% endif %}
+                          {% endfor %}
+
+                          <!-- dropdown menu end -->
+                          <!-- dropdown menu begin -->
+                          <div class="dropdown col-md-3">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Select the Logic
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="#">equal</a>
+                              <a class="dropdown-item" href="#">not equal</a>
+                              <a class="dropdown-item" href="#">begins with</a>
+                              <a class="dropdown-item" href="#">doesn't begins with</a>
+                              <a class="dropdown-item" href="#">contains</a>
+                              <a class="dropdown-item" href="#">doesn't contains</a>
+                              <a class="dropdown-item" href="#">ends with</a>
+                              <a class="dropdown-item" href="#">doesn't ends with</a>
+                              <a class="dropdown-item" href="#">is empty</a>
+                              <a class="dropdown-item" href="#">is not empty</a>
+                              <a class="dropdown-item" href="#">is null</a>
+                              <a class="dropdown-item" href="#">is not null</a>
+
+                              just some test
+                              {% for item in logic_item_list %}
+                                <a class="dropdown-item" href="#"> {{ item }} </a>
+                              {% endfor %}
+
+                            </div>
+                          </div>
+                          <!-- dropdown menu end -->
+                          <input type="text" class="form-control col-md-4">
+                          <button type="button" class="btn btn-danger btn-sm col-md-1 statementdeletebtn">Delete</button>
+                        </div>
+                      </div>
+
+
+                      <div class="oneconditionalstatement col-md-12 draggablebox" draggable="true" data-draggable = "item">
+                          <!-- dropdown menu begin -->
+                          <div class="form-inline justify-content-between">
+                          <div class="dropdown col-md-3">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Select the Variable
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="#">Action</a>
+                              <a class="dropdown-item" href="#">Another action</a>
+                              <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                          </div>
+                          <!-- dropdown menu end -->
+                          <!-- dropdown menu begin -->
+                          <div class="dropdown col-md-3">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Select the Logic
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="#">equal</a>
+                              <a class="dropdown-item" href="#">not equal</a>
+                              <a class="dropdown-item" href="#">begins with</a>
+                              <a class="dropdown-item" href="#">doesn't begins with</a>
+                              <a class="dropdown-item" href="#">contains</a>
+                              <a class="dropdown-item" href="#">doesn't contains</a>
+                              <a class="dropdown-item" href="#">ends with</a>
+                              <a class="dropdown-item" href="#">doesn't ends with</a>
+                              <a class="dropdown-item" href="#">is empty</a>
+                              <a class="dropdown-item" href="#">is not empty</a>
+                              <a class="dropdown-item" href="#">is null</a>
+                              <a class="dropdown-item" href="#">is not null</a>
+                            </div>
+                          </div>
+                          <!-- dropdown menu end -->
+                          <input type="text" class="form-control col-md-4">
+                          <button type="button" class="btn btn-danger btn-sm col-md-1 statementdeletebtn">Delete</button>
+                        </div>
+                      </div>
+
+                  <!-- </div> -->
+
+              </div>
+
+              <script>
+                $(function(){
+                  $("#logic-condition").click(function(){
+                    var vlue = $(this).value();
+                    if (value == 'orbtn'){
+
+                    }else{
+
+                    }
+                  });
+                });
+              </script>
+
+              <div class="container">
+              <div class="col-md-1 conditionalline">
+              </div>
+
+              <div class="conditionalstatements container group-box" id="conditionalstatements">
+
+                  <div class="row justify-content-between conditional-statement-header">
+                    <div class="btn-group btn-group-toggle col-md-5" data-toggle="buttons">
+                      <label class="btn btn-sm btn-outline-primary active">
+                        <input type="radio" name="andorlogic" id="andbtn" autocomplete="off" checked> AND
+                      </label>
+                      <label class="btn btn-sm btn-outline-primary">
+                        <input type="radio" name="andorlogic" id="orbtn" autocomplete="off"> OR
+                      </label>
+                    </div>
+
+                    <div class="col-md-auto justify-content-end">
+                      <button type="button" class="btn btn-danger btn-sm" id="removegroup">Remove the Group</button>
+                      <button type="button" class="btn btn-success btn-sm add-one-rule-btn">Add Rule</button>
+                      <button type="button" class="btn btn-success btn-sm add-one-group-btn">Add Group</button>
+                    </div>
+                  </div>
+
+                  <div class="container justify-content-end statement-part" data-draggable = "target">
+
+                    <div class="oneconditionalstatement row col-md-12 draggablebox" draggable="true" data-draggable = "item">
+                        <!-- dropdown menu begin -->
+                        <div class="form-inline justify-content-between">
+                        <div class="dropdown col-md-3">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select the Variable
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                          </div>
+                        </div>
+                        <!-- dropdown menu end -->
+                        <!-- dropdown menu begin -->
+                        <div class="dropdown col-md-3">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select the Logic
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">equal</a>
+                            <a class="dropdown-item" href="#">not equal</a>
+                            <a class="dropdown-item" href="#">begins with</a>
+                            <a class="dropdown-item" href="#">doesn't begins with</a>
+                            <a class="dropdown-item" href="#">contains</a>
+                            <a class="dropdown-item" href="#">doesn't contains</a>
+                            <a class="dropdown-item" href="#">ends with</a>
+                            <a class="dropdown-item" href="#">doesn't ends with</a>
+                            <a class="dropdown-item" href="#">is empty</a>
+                            <a class="dropdown-item" href="#">is not empty</a>
+                            <a class="dropdown-item" href="#">is null</a>
+                            <a class="dropdown-item" href="#">is not null</a>
+                          </div>
+                        </div>
+                        <!-- dropdown menu end -->
+                        <input type="text" class="form-control col-md-4" id="conditiontext">
+                        <button type="button" class="btn btn-danger btn-sm col-md-1 statementdeletebtn">Delete</button>
+                      </div>
+                    </div>
+
+                    <div class="oneconditionalstatement row col-md-12 draggablebox" draggable="true" data-draggable = "item">
+                        <!-- dropdown menu begin -->
+                        <div class="form-inline justify-content-between">
+                        <div class="dropdown col-md-3">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select the Variable
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                          </div>
+                        </div>
+                        <!-- dropdown menu end -->
+                        <!-- dropdown menu begin -->
+                        <div class="dropdown col-md-3">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select the Logic
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">equal</a>
+                            <a class="dropdown-item" href="#">not equal</a>
+                            <a class="dropdown-item" href="#">begins with</a>
+                            <a class="dropdown-item" href="#">doesn't begins with</a>
+                            <a class="dropdown-item" href="#">contains</a>
+                            <a class="dropdown-item" href="#">doesn't contains</a>
+                            <a class="dropdown-item" href="#">ends with</a>
+                            <a class="dropdown-item" href="#">doesn't ends with</a>
+                            <a class="dropdown-item" href="#">is empty</a>
+                            <a class="dropdown-item" href="#">is not empty</a>
+                            <a class="dropdown-item" href="#">is null</a>
+                            <a class="dropdown-item" href="#">is not null</a>
+                          </div>
+                        </div>
+                        <!-- dropdown menu end -->
+                        <input type="text" class="form-control col-md-4">
+                        <button type="button" class="btn btn-danger btn-sm col-md-1 statementdeletebtn">Delete</button>
+                      </div>
+                    </div>
+
+                  </div>
+
+              </div>
+              </div>
+
+                      <div class="row justify-content-start" id="querypreview">
+                        <p>Query Preview: <kbd>{{query_preview}}</kbd></p>
+                      </div>
+                    </div>
+                  </div>
+                <div>
+                <script>
+
+                </script>
+
+                <hr>
+
+                <div class="step">
+                  <h4>Step 4: Select Query Output.</h4>
+                  <p>Select the desired format of the output file. For large data requests, select a compression type to expedite downloads. If you enter your email address, you will receive an email that contains a URL to the output file when the data request is finished processing.</p>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <p>Output Format</p>
+
+                      <form action="" id="output-format">
+                        <input type="radio" name="outputformat" value="csv"> comma-delimited text (*.csv) <br>
+                        <input type="radio" name="outputformat" value="text"> fixed-width text (*.txt) <br>
+                        <input type="radio" name="outputformat" value="excel"> Excel spreadsheet (*.xlsx) <br>
+                        <input type="radio" name="outputformat" value="stata"> STATA file (*.dta) <br>
+                        <input type="radio" name="outputformat" value="GVKEY"> SPSS (*.sav) <br>
+                        <input type="radio" name="outputformat" value="sas"> SAS (*.sas7bdat)
+                      </form>
+
+                    </div>
+                    <div class="col-md-6">
+                      <p>Compression Type</p>
+                      <form action="" id="compression-type">
+                        <input type="radio" name="compressiontype" value="none"> None <br>
+                        <input type="radio" name="compressiontype" value="zip"> zip (*.zip) <br>
+                        <input type="radio" name="compressiontype" value="gzip"> gzip (*.gz)
+                      </form>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="row">
+
+                      <div class="col-md-6">
+                        <p> E-Mail Address (Optional) </p>
+                        <div class="input-group mb-3" id="email-address">
+                          <input type="text" class="form-control" placeholder="E-mail" aria-label="E-mail address" aria-describedby="basic-addon2">
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button">Edit Preferences</button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <p> Custom Field (Optional) </p>
+                        <div class="input-group mb-3" id="custom-field">
+                          <input type="text" class="form-control" placeholder="" aria-label="Custom field" aria-describedby="basic-addon2">
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button">?</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  <div class="row" id="lastrow">
+                    <div class="col-md-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck1">
+                          Save this query to my account
+                        </label>
+                      </div>
+                      <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="" aria-label="Custom field" aria-describedby="basic-addon2">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="totalsubmit">
+                <a href="output.html"><button type="button" class="btn btn-primary">Submit Query</button></a>
+              </div>
+
+              </div>
+            </div>
+    <!-- ########################################################################################### -->
+            <div class="tab-pane fade" id="variabledesc" role="tabpanel" aria-labelledby="variabledesc-tab">
+                <h4>SEC Analytics Suite - Comprehensive Daily and Quarterly SEC Filings Index</h4>
+                <table class="table">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Item</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <!-- <th scope="row">1</th> -->
+                      <td>Library:</td>
+                      <td>sec</td>
+                    </tr>
+                    <tr>
+                      <!-- <th scope="row">2</th> -->
+                      <td>File:</td>
+                      <td>forms</td>
+                      <!-- <td>@fat</td> -->
+                    </tr>
+                    <tr>
+                      <!-- <th scope="row">3</th> -->
+                      <td>Data Range:</td>
+                      <td>01/01/1994 - 06/04/2018</td>
+                      <!-- <td>@twitter</td> -->
+                    </tr>
+                    <tr>
+                      <!-- <th scope="row">3</th> -->
+                      <td>Update Schedule:</td>
+                      <td>Daily</td>
+                      <!-- <td>@twitter</td> -->
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h4>Variable Reference</h4>
+                <table class="table">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Variable Name</th>
+                      <th scope="col">Data Type</th>
+                      <th scope="col">Variable Description</th>
+                      <th scope="col">Detail</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <!-- <th scope="row">1</th> -->
+                      <td>CIK</td>
+                      <td>CHAR</td>
+                      <td>SEC Central Index Key</td>
+                      <td><a href="#" ><i class="material-icons">description</i></a></td>
+                    </tr>
+
+                  </tbody>
+                </table>
+
+
+            </div>
+    <!-- ########################################################################################### -->
+            <div class="tab-pane fade" id="manuals" role="tabpanel" aria-labelledby="manuals-tab">
+              <h4>SEC Analytics Suite</h4>
+              <div class="container form-inline">
+                <div class="col-md-6 manuallist">
+                  <button type="button" class="btn btn-outline-secondary btn-sm btn-block manualbtn">SEC Analytics Suite Manual<i class="material-icons manualicon">open_in_new</i></button>
+                </div>
+                <div class="col-md-6 manuallist">
+                  <button type="button" class="btn btn-outline-secondary btn-sm btn-block manualbtn">SEC Analytics Suite Dataset List<i class="material-icons manualicon">open_in_new</i></button>
+                </div>
+                <div class="col-md-6 manuallist">
+                <button type="button" class="btn btn-outline-secondary btn-sm btn-block manualbtn">SEC Forms List<i class="material-icons manualicon">open_in_new</i></button>
+                </div>
+                <div class="col-md-6 manuallist">
+                <button type="button" class="btn btn-outline-secondary btn-sm btn-block manualbtn">Overview of the Filings Exihibits Data<i class="material-icons manualicon">open_in_new</i></button>
+                </div>
+                <div class="col-md-6 manuallist">
+                <button type="button" class="btn btn-outline-secondary btn-sm btn-block manualbtn">Overview of Form 8-K Item Data<i class="material-icons manualicon">open_in_new</i></button>
+                </div>
+              </div>
+            </div>
+
+    <!-- ########################################################################################### -->
+            <div class="tab-pane fade" id="datasetlist" role="tabpanel" aria-labelledby="datasetlist-tab">
+
+              <h4>Forms Using this File</h4>
+
+              <h4>Variable</h4>
+              <table class="table">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Index</th>
+                    <th scope="col">Variable Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Length</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <!-- <th scope="row">1</th> -->
+                    <td>2</td>
+                    <td>CIK</td>
+                    <td>CHAR</td>
+                    <td>10</td>
+                    <td>SEC Central Index Key</td>
+                  </tr>
+
+                </tbody>
+              </table>
+
+            </div>
+    <!-- ########################################################################################### -->
+          </div>
+      </div>
+    </div>
+    </div>
+
+
+
+
+
+
+
+{% endblock %}

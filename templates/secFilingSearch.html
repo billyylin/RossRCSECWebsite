@@ -1,0 +1,396 @@
+{% extends "base.html" %}
+
+<!--- look at base.html and find variables to find out what each variable does --->
+<!--- start defining variables --->
+
+{% set title = "SEC FIlings Search - Research Computing SEC Filing Database" %}
+{% set cssFile = "secFilingsSearch.css" %}
+{% set activeSearch = "active" %}
+
+<!---- end defining variables --->
+{% block url %}
+      <li class="breadcrumb-item active" aria-current="page"><a href="{{url_for('sec_Filing_Search')}}">SEC Filings Search</a></li>
+{% endblock %}
+
+<!--- starting content  --->
+{% block content %}
+        <!-- <div class="tab-content" id="myTabContent"> -->
+        <!-- <form method="POST"  action="/output"> -->
+<!---        <form method="POST"  action="{{ url_for('eightkoutput', output_number=output_number) }}"> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">         
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="queryform" role="tabpanel" aria-labelledby="queryform-tab">
+            <!--  <form method="POST"  action="{{ url_for('search') }}"> -->
+              <form action="/secfilingsearch">  <!--<form method="POST"  action="{{ url_for('search') }}">-->       
+                  <div class="container" id="full-page-container">
+                    <div class="row justify-content-center">
+                      <h4>SEC Analytics Suite - Filings Search</h4>
+                    </div>
+
+                    <div id="accordion">
+                        <div class="card">
+                          <div class="card-header">
+                            <a class="card-link" data-toggle="collapse" href="#collapseOne">
+                              Step #1: Pick Documents
+                            </a>
+                          </div>
+                          <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" id="defaultCheck1" name="8-K" {%if eightk%}checked{%endif%}>
+                                  <label class="form-check-label" for="defaultCheck1">
+                                    Form 8-K
+                                  </label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" id="defaultCheck2" name="10-K" {%if tenk%}checked{%endif%}>
+                                  <label class="form-check-label" for="defaultCheck2">
+                                    Form 10-K
+                                  </label>
+                                </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      
+                        <div class="card">
+                          <div class="card-header">
+                            <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+                              Step #2: Pick Date Range
+                            </a>
+                          </div>
+                          <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                            <div class="card-body">                              
+                            </div>
+                          </div>
+                        </div>   
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                          <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+                            Step #3: Search
+                          </a>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center"></div>
+                      <div class="input-group mb-3">
+                        <input type="text" class="form-control" aria-label="Text input with dropdown button" name="keyword" {%if keyword%}value="{{keyword}}"{%endif%}>
+                        <div class="input-group-append">
+                          <button type="submit" class="btn btn-outline-secondary" id="final_filing_output" type="button">Search</button>
+                          <button class="btn btn-outline-secondary" id="code_lookup" onClick="window.open('http://0.0.0.0:5000/codelookup',width=200,height=200);" type="button">Code Lookup</button>
+                        </div>
+                    </div>
+
+<style>
+  td{
+      word-wrap:break-word;
+  }
+    table, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+    table {
+      font-family: arial, sans-serif;
+      /* table-layout: auto; */
+      border-collapse: collapse;
+      min-width: 100%;
+      overflow: scroll;
+      overflow-x: scroll;
+      margin: 10px;
+    }
+    
+    td, th {
+      border: 1px solid #c4c4c4;
+      text-align: left;
+      padding: 5px;
+    }
+  .thead-bg-color {
+    background-color: white;
+    color: black;
+  }
+  .table-active {
+    background-color: #f5f5f5;
+  }
+  .hideContent {
+      overflow: hidden;
+      line-height: 1em;
+      height: 2em;
+  }
+  
+  .showContent {
+      line-height: 1em;
+      height: auto;
+  }
+  .showContent{
+      height: auto;
+  }
+  .show-more {
+      padding: 10px 0;
+      text-align: center;
+  }
+  .btn {
+              background-color: #007bff;
+              border: none;
+              color: white;
+              padding: 12px 30px;
+              cursor: pointer;
+            }
+  
+            /* Darker background on mouse-over */
+            .btn:hover {
+              background-color: #0569d4;
+              color: white;
+            }
+            
+  .form-container{
+    margin-bottom: 10px; 
+  }
+
+    </style>
+
+<div class="container">
+  <div class="row">
+
+        <div class="col">
+            <p> Showing Results for: <strong> {{keyword}} </strong> </p>
+            <p> Number of Results Found:  <strong> {{resultsList | length}} </strong> </p>
+        </div>
+    
+        <div class="col"> 
+            <p> It took: <strong> {{searchTime}} </strong> seconds to search the term </p>
+            <p> It took: <strong> {{displayTime}} </strong> seconds to display results</p>
+        </div>
+
+        <div class="col">
+          <button name="download" type="submit" class="btn"><i class="fa fa-download"></i> Download as CSV</button>
+        
+        </div>
+
+</div>
+
+<!-- <p> Showing Results for: <strong> {{keyword}} </strong> </p>
+<p> Number of Results Found:  <strong> {{resultsList | length}} </strong> </p>
+<p> It took: <strong> {{searchTime}} </strong> seconds to search the term </p>
+<p> It took: <strong> {{displayTime}} </strong> seconds to display results</p>
+<p> <button class="btn"><i class="fa fa-download"></i> Download</button> </p> -->
+
+<!-- Show <input type="text" class="form-control" id="usr" style="width:8%"> Entries -->
+<div class="form-container">
+  <form class="form-inline">
+    <!--
+      Show <input type="text" class="form-control" id="inlineFormInputGroupUsername2" placeholder="#" style = "width:6%"> Entries-->
+      <body onload="return update_per_page();"></body>
+      <script>
+        const update_page_number = (page_number) => {
+          const per_page = parseInt(document.getElementById("per_page").value);
+
+          {%if resultsList | count%}
+            const nr_pages = page_numbers.childElementCount - 2;
+            let btn = document.createElement("BUTTON");
+            btn.setAttribute("onclick", `return update_page_number(${(nr_pages + page_number - 1) % nr_pages});`);
+            btn.innerHTML = "Previous";
+            page_numbers.replaceChild(btn, page_numbers.firstChild);
+            btn = document.createElement("BUTTON");
+            btn.setAttribute("onclick", `return update_page_number(${(page_number + 1) % nr_pages});`);
+            btn.innerHTML = "Next";
+            page_numbers.replaceChild(btn, page_numbers.lastChild);
+          {%endif%}
+
+          for (let i = 0, k = 0;; ++i) {
+            let disp, cls;
+            
+            if (i == page_number) {
+              disp = "";
+              // background-color = "#007bff";
+              // border = "#007bff"
+              color = "#007bff";
+            } else {
+              disp = "none";
+              color = "";
+
+            }
+
+            document.getElementById("page_numbers").children[1 + i].style.color = color;
+
+            for (let j = 0; j < per_page; ++j, ++k) {
+              if (k == {{resultsList | length}}) {
+                return false;
+              }
+
+              document.getElementById(`result_${k}`).style.display = disp;
+            }
+          }
+        };
+
+        const update_per_page = () => {
+          const per_page = parseInt(document.getElementById("per_page").value);
+          const page_numbers = document.getElementById("page_numbers");
+          
+          while (page_numbers.hasChildNodes()) {
+            page_numbers.removeChild(page_numbers.lastChild);
+          }
+
+          {%if resultsList | count%}
+            let btn = document.createElement("BUTTON");
+            btn.innerHTML = "Previous";
+            page_numbers.appendChild(btn);
+          {%endif%}
+
+          for (let i = 0, j = 0; i < {{resultsList | length}}; i += per_page, ++j) {
+            const btn = document.createElement("BUTTON");
+            btn.setAttribute("onclick", `return update_page_number(${j});`);
+            btn.innerHTML = `${j}`;
+            page_numbers.appendChild(btn);
+          }
+
+          {%if resultsList | count%}
+            const nr_pages = page_numbers.childElementCount - 1;
+            btn.setAttribute("onclick", `return update_page_number(${nr_pages - 1});`);
+            btn = document.createElement("BUTTON");
+            btn.setAttribute("onclick", `return update_page_number(${1 % nr_pages});`);
+            btn.innerHTML = "Next";
+            page_numbers.appendChild(btn);
+          {%endif%}
+
+          return update_page_number(0);
+        };
+      </script>
+      {%if resultsList | count%}
+        Show <input id="per_page" onchange="return update_per_page();" type="number" max="{{resultsList | length}}" min=1 step=1 value=5> Entries Per Page
+      {%endif%}
+  </form>
+</div>
+
+<div id="page_numbers">
+</div>
+<!-- yooo
+
+<nav aria-label="...">
+  <ul class="pagination">
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1">Previous</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item active">
+      <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#">Next</a>
+    </li>
+  </ul>
+</nav> -->
+
+{%for j in range(resultsList | length)%}
+{%set result = resultsList[j]%}
+<div class = "table-wrap">
+  <div id="result_{{j}}" style="display:none">
+      <table class= "table">
+        <thead class= "thead-bg-color">
+          <tr>
+            <th>Document</th>
+            <th>Company Name</th>
+            <th>Form Type</th>
+            <th>Fiscal Year </th>
+          </tr>
+        </thead>
+          <tr class="table-active">
+            <td><a href="{{result[19]}}">{{result[19][40:-10]}}</a></td>   
+            <td>{{result[3]}}</td>
+            <td>{{result[9]}}</td>
+            <td>{{result[12][-4:]}}</td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <p class="item"><span class="itemlabel"> <strong> IRS Number: </strong> {{result[1]}}</span></p>
+              <p class="item"><span class="itemlabel"> <strong> CIK: </strong> {{result[2]}} </span></p>
+              <p class="item"><span class="itemlabel"> <strong> SIC: </strong> {{result[4]}} </span></p>
+              <p class="item"><span class="itemlabel"> <strong> Industry: </strong> {{result[5]}} </span></p>
+              <p class="item"><span class="itemlabel"> <strong> State of Incorp.: </strong> {{result[7]}}</span></p>
+              <p class="item"><span class="itemlabel"> <strong> Business Address: </strong> {{result[17]}} </span></p>
+              <p class="item"><span class="itemlabel"> <strong> Business Phone Number: </strong> {{result[18]}} </span></p>
+            </td>
+            <td colspan="2">
+                <p class="item"><span class="itemlabel"> <strong> File Number: </strong> {{result[10]}}</span></p>
+                <p class="item"><span class="itemlabel"> <strong> Accession Number:</strong>  {{result[0]}}</span></p>
+                <p class="item"><span class="itemlabel"> <strong> Fiscal Year End: </strong> {{result[8]}}</span></p>
+                <p class="item"><span class="itemlabel"> <strong> Period of Report: </strong>  {{result[11]}} </span></p>
+                <p class="item"><span class="itemlabel"> <strong> Filing Date: </strong> {{result[12]}} </span></p>
+                <p class="item"><span class="itemlabel"> <strong> Acceptance Date: </strong> {{result[13]}}</span></p>
+                <p class="item"><span class="itemlabel"> <strong> Acceptance Time: </strong> {{result[14]}}</span></p>
+
+            </td>
+          </tr>
+
+          <tr>
+              <td colspan="4">
+                  <p class="item"><span class="itemlabel"> <strong> Number of Documents Submitted: </strong> {{result[15]}}</span></p>
+                  <p class="item"><span class="itemlabel"> <strong> Items: </strong> {{result[16]}}</span></p>
+                  <p class="item"><span class="itemlabel"> <strong> Text File: </strong> <a href="{{result[20]}}">{{result[20][40:-4]}}</a></span></p>
+                  <p class="item"><span class="itemlabel"> <strong> Text File Size: </strong> {{result[21]}}</span></p>
+              </td>
+          </tr>
+
+          </tr>
+          <td colspan="4">
+              <p class="item"><span class="itemlabel"> <strong> Frequency: </strong> {{result[22]}}</p>
+                <p class="item"><span class="itemlabel"> <strong> Snippet Text Matches Within Document: </strong> {{result[23] | safe}} </p>
+            </td>
+          </tr>
+        </table>
+
+    
+  <!-- <br>
+  <table>
+    <tr>
+      <th>Accession Number</th>
+      <th>IRS Number</th>
+      <th>Company Name</th>
+      <th>SIC</th>
+      <th>Industry</th>
+      <th>State of Incorporation</th>
+      <th>Fiscal Year End</th>
+      <th>Form Type </th>
+      <th>Filing Number</th>
+      <th>Period of Report</th>
+      <th>Filing Date</th>
+      <th>Acceptance Date</th>
+      <th>Acceptance Time</th>
+      <th>Number of Documents Submitted</th>
+      <th>Items</th>
+      <th>Business Address</th>
+      <th>Business Phone Number</th>
+      <th>SEC EDGAR URL</th>
+      <th>Text File URL</th>
+      <th>Text File Size</th>
+      <th>Freqency</th>
+  </tr>
+    <tr>
+      {%for i in range(result | length - 1)%}
+      {%if i == 5%}
+      <td><a href="{{result[i]}}">{{result[i]}}</a></td>
+      {%else%}
+      <td>{{result[i]}}</td>
+      {%endif%}
+      {%endfor%}
+    </tr>
+
+    <tr>
+        <th rowspan="1">Content:</th>
+        <td colspan="6"> {{result[22] | safe}}</td>
+    </tr>
+    
+  </table>
+  </br> -->
+  </div>
+</div>
+{%endfor%}
+<!-- ########################################################################################### -->
+<!--- ending content --->
+{% endblock %}
+
+</html>
+
+

@@ -1,0 +1,40 @@
+{"filing_index_dataset_list":[
+    {"index":"1", "variable_name":"gvkey", "type":"CHAR", "length":"6", "description":"Compustat's Global Company Key - Header"},
+    {"index":"2", "variable_name":"CIK", "type":"CHAR", "length":"10", "description":"SEC Central Index Key"},
+    {"index":"3", "variable_name":"FDATE", "type":"NUM", "length":"8", "description":"Filing Date"},
+    {"index":"4", "variable_name":"FINDEXDATE", "type":"NUM", "length":"8", "description":"First SECDate with Index Record Information"},
+    {"index":"5", "variable_name":"LINDEXDATE", "type":"NUM", "length":"8", "description":"Last SECDate with Index Record Information"},
+    {"index":"6", "variable_name":"Form", "type":"CHAR", "length":"12", "description":"SEC Form"},
+    {"index":"7", "variable_name":"CoName", "type":"CHAR", "length":"62", "description":"Company Name"},
+    {"index":"8", "variable_name":"FName", "type":"CHAR", "length":"52", "description":"Reference Name of Complete Report Filing"},
+    {"index":"9", "variable_name":"IName", "type":"CHAR", "length":"58", "description":"Reference Name of Report HTML Index"},
+    {"index":"10", "variable_name":"SOURCE", "type":"NUM", "length":"8", "description":"Index Source: 1-Daily, 2-Full, 3-Both"}
+],
+"filing_exhibits_dataset_list":[
+  {"index":"2", "variable_name":"CIK", "type":"CHAR", "length":"10", "description":"SEC Central Index Key"},
+  {"index":"3", "variable_name":"FDate", "type":"NUM", "length":"8", "description":"Filing Date"},
+  {"index":"4", "variable_name":"Form", "type":"CHAR", "length":"12", "description":"SEC Form"},
+  {"index":"5", "variable_name":"CoName", "type":"CHAR", "length":"62", "description":"Company Name"},
+  {"index":"6", "variable_name":"FName", "type":"CHAR", "length":"52", "description":"Reference Name of Complete Report Filing"},
+  {"index":"7", "variable_name":"FSize", "type":"NUM", "length":"8", "description":"Complete Report File Size"},
+  {"index":"8", "variable_name":"RDate", "type":"NUM", "length":"8", "description":"Conformed Period of Report - Fiscal Period End"},
+  {"index":"9", "variable_name":"SECADate", "type":"NUM", "length":"8", "description":"SEC Acceptance Date"},
+  {"index":"10", "variable_name":"SECATime", "type":"CHAR", "length":"6", "description":"SEC Acceptance Time"},
+  {"index":"11", "variable_name":"SEQuence", "type":"CHAR", "length":"3", "description":"Exhibit Sequence Number"},
+  {"index":"12", "variable_name":"Type", "type":"CHAR", "length":"50", "description":"Exhibit Type"},
+  {"index":"13", "variable_name":"Description", "type":"CHAR", "length":"80", "description":"Exhibit Description"},
+  {"index":"14", "variable_name":"FileName", "type":"CHAR", "length":"80", "description":"Exhibit Reference Filename"}
+  ],
+  "eightk_items_dataset_list":[
+    {"index":"2", "variable_name":"CIK", "type":"CHAR", "length":"10", "description":"SEC Central Index Key"},
+    {"index":"3", "variable_name":"FDate", "type":"NUM", "length":"8", "description":"Filing Date"},
+    {"index":"4", "variable_name":"Form", "type":"CHAR", "length":"12", "description":"SEC Form"},
+    {"index":"5", "variable_name":"CoName", "type":"CHAR", "length":"62", "description":"Company Name"},
+    {"index":"6", "variable_name":"FName", "type":"CHAR", "length":"52", "description":"Reference Name of Complete Report Filing"},
+    {"index":"7", "variable_name":"FSize", "type":"NUM", "length":"8", "description":"Complete Report File Size"},
+    {"index":"8", "variable_name":"RDate", "type":"NUM", "length":"8", "description":"Conformed Period of Report"},
+    {"index":"9", "variable_name":"SECADate", "type":"NUM", "length":"8", "description":"SEC Acceptance Date"},
+    {"index":"10", "variable_name":"SECATime", "type":"CHAR", "length":"6", "description":"SEC Acceptance Time"},
+    {"index":"11", "variable_name":"NItem", "type":"NUM", "length":"8", "description":"ITEM Sequence Number"},
+    {"index":"12", "variable_name":"Item", "type":"CHAR", "length":"150", "description":"Form 8-K Item"}
+]}

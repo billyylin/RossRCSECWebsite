@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+<!--- look at base.html and find variables to find out what each variable does --->
+<!--- start defining variables --->
+{% set title = "Manuals - Research Computing SEC Filing Database" %}
+{% block css %}  <link href="static/css/manuals.css" rel="stylesheet"> {% endblock %}
+
+{% block content %}
+  <div class="row jumbotron justify-content-md-center no-gutters" id="introduction">
+    <h1 class="display-6">SEC Manuals</h1>
+    <!-- <p class="lead">
+      The SEC Analytics Suite attempts to satisfy a growing demand in academia and industry research communities to have a unified platform with necessary resources and tools to data-mine and analyze financial and non-financial firm-related information that is not systematically retrieved and provided to academia by data vendors.
+    </p>
+
+    <a href="{{url_for('manuals')}}"><button class="btn btn-outline-primary btn" role="button">Manuals and Overviews</button></a> -->
+  </div>
+
+  {% block body %} {% endblock %}
+
+  <div class="container" id="content">
+    <div class="row justify-content-center">
+              <!-- <div class="col-sm-4"> -->
+                <div class="card col-md-3">
+                  <div class="card-body button-group">
+                    <div>
+                      <h5 class="card-title">SEC Analytics Suite</h5>
+                    </div>
+                    <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+                    <div>
+                      <a href="{{ url_for('static', filename='Manual_Test.pdf') }}" class="btn btn-primary">See the Manual</a>
+                    </div>
+                  </div>
+                </div>
+              <!-- </div> -->
+              <!-- <div class="col-sm-4"> -->
+                <div class="card col-md-3">
+                  <div class="card-body button-group">
+                    <div>
+                      <h5 class="card-title">Dataset List</h5>
+                    </div>
+                    <div>
+                      <a href="{{ url_for('static', filename='Manual_Test.pdf') }}" class="btn btn-primary">See the Manual</a>
+                    </div>
+
+                    <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+                  </div>
+                </div>
+                <div class="card col-md-3">
+                  <div class="card-body button-group">
+                    <div>
+                      <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+                      <h5 class="card-title">SEC Forms List</h5>
+                    </div>
+                    <div>
+                      <a href="{{ url_for('static', filename='Manual_Test.pdf') }}" class="btn btn-primary">See the Manual</a>
+                    </div>
+                </div>
+    </div>
+                <!-- <div class="col-sm-4"> -->
+                <div class="card col-md-3">
+                  <div class="card-body button-group">
+                    <div>
+                      <h5 class="card-title">Filings Exihibits Data</h5>
+                    </div>
+                    <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+                    <div>
+                      <a href="{{ url_for('static', filename='Manual_Test.pdf') }}" class="btn btn-primary">See the Manual</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="card col-md-3">
+                  <div class="card-body button-group">
+                    <h5 class="card-title">Form 8-K Item Data</h5>
+                    <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+                    <a href="{{ url_for('static', filename='Manual_Test.pdf') }}" class="btn btn-primary">See the Manual</a>
+                  </div>
+                </div>
+                <!-- <div class="card col-md-3">
+                  <div class="card-body row justify-content-center">
+                    <h5 class="card-title">List of Filings Exihibits</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go to the database</a>
+                  </div
+                </div> -->
+                </div>
+</div>
+
+</body>
+{% endblock %}
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- 这里有一个关于url_for：https://stackoverflow.com/questions/16351826/link-to-flask-static-files-with-url-for -->
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <title>Research Computing SEC Filing Database</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="shortcut icon" href="http://vpcomm.umich.edu/brand/favicon.ico"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gijgo@1.9.6/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.6/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <!-- <script type="text/javascript" src="index.js"></script> -->
+    <script type="text/javascript" src="{{ url_for('static', filename='index.js')}}"></script>
+
+    <!-- <link rel="stylesheet" type="text/css" href="mystyles.css" media="screen" /> -->
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='mystyle.css')}}" media="screen" />
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <!-- 这里都是head里面的东西，统一粘过来 -->
+    <title>{% block title %}{% endblock %} - SEC Database</title>
+    {% endblock %}
+
+</head>
+<body>
+    <div id="content">{% block content %}{% endblock %}</div>
+
+    <!-- ???这里是不是应该用这个
+    <header id="header">
+      多加了一个div content有没有影响 -->
+
+    <!-- <div id="footer">
+        {% block footer %}
+        &copy; Copyright 2008 by <a href="http://domain.invalid/">you</a>.
+        {% endblock %}
+    </div> -->
+
+    <div class="page-footer font-small indigo mt-5 col-md-12" id="footer">
+      {% block footer %}
+      <div class="container">
+        <div class="row text-center d-flex justify-content-center pt-5 mb-2">
+          <div class="col-md-2">
+            <h6 class="text-uppercase font-weight-bold">
+              <a href="#!">About Us</a>
+              <!-- Here comes the absolute url of the offcial website -->
+            </h6>
+          </div>
+          <div class="col-md-2">
+            <h6 class="text-uppercase font-weight-bold">
+              <a href="#!">Projects</a>
+            </h6>
+          </div>
+          <div class="col-md-2">
+            <h6 class="text-uppercase font-weight-bold">
+              <a href="#!">Databases</a>
+            </h6>
+          </div>
+          <div class="col-md-2">
+            <h6 class="text-uppercase font-weight-bold">
+              <a href="#!">Contact</a>
+            </h6>
+          </div>
+        </div>
+        <hr class="rgba-white-light" style="margin: 0 3%;">
+        <div class="row d-flex text-center justify-content-center mb-md-0 mb-4">
+          <div class="col-md-8 col-12 mt-5 text-white">
+            <p style="line-height: 1.7rem">The Ross Research Computing provides support for the empirical research needs of faculty and PhD students at the Ross School of Business.</p>
+          </div>
+        </div>
+        <div class="footer-copyright text-center py-4 text-white">© 2018 Copyright:
+          <a href=""> Ross Research Computing</a>
+        </div>
+      </div>
+      {% endblock %}
+    </div>
+</body>
+</html>

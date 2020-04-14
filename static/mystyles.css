@@ -1,0 +1,361 @@
+html{
+  min-height: 100%;
+  position: relative;
+  body{
+    font-family: Arial, sans-serif;
+    font-weight: normal;
+    color: #333;
+  }
+}
+
+#footer{
+  bottom:0;
+  width:100%;
+  /* position:absolute; */
+  background-color: #4d94ff;
+}
+
+.page-footer a{
+  color: white !important;
+}
+.footer-copyright{
+  font-size: 12px;
+}
+
+.dates-wrapper {
+  background: #f0f0f0;
+  padding: 1em 1em 0 1em;
+  display: inline-block;
+}
+
+.input-text {
+  background-color: #ffffff;
+  padding: 2px 10px;
+  color: #333;
+  border: 1px solid #dddddd;
+  outline: none;
+  vertical-align: middle;
+  height: 36px;
+  border-radius: 0;
+  display: block;
+  width: 100%;
+  -webkit-appearance: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+}
+
+.date-wrapper {
+  position: relative;
+  margin: 0 42px 10px 0;
+  display: inline-block;
+  .label {
+    float: left;
+    display: inline-block;
+    margin-right: 28px;
+    padding-top: 10px;
+  }
+  .input {
+    font-size: 15px;
+    color: #333;
+    max-width: 172px;
+    float: left;
+    margin-right: 10px;
+    input {
+      float: left;
+      width: 100%;
+      padding: 2px 10px;
+    }
+  }
+  .calendar-btn {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    float: left;
+    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/9487/icon-calendar-72x72.png);
+    background-repeat: no-repeat;
+    background-size: 36px 36px;
+  }
+}
+
+.pika-single {
+  position: absolute;
+  top: 40px;
+  left: 0px;
+  .pika-title {
+    color: #444;
+  }
+  .is-selected .pika-button {
+    border-radius: 0;
+    box-shadow: none;
+    background: #ec0000;
+  }
+  .pika-table tbody td {
+    border: 1px solid #b9b9b9;
+  }
+  .pika-button:hover {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #868686 !important;
+  }
+  .is-today .pika-button {
+    color: #ec0000;
+  }
+  .is-today.is-selected .pika-button {
+    color: #fff;
+  }
+}
+
+.hide-text {
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.queryvariables{
+  border-style: solid;
+  border-color: #4d94ff;
+  border-width: 1.5px;
+  padding: 10px 20px;
+}
+
+.conditionalstatements{
+  border-style: solid;
+  border-color: #4d94ff;
+  border-width: 1.5px;
+  margin: 10px 0px;
+
+}
+
+.oneconditionalstatement{
+  border-style: solid;
+  border-color: #4d94ff;
+  border-width: 1.5px;
+  margin: 10px 0px;
+  position: relative;
+}
+
+/* div.statement-part::before{
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: 1;
+  left: 72px;
+  top: 1812px;
+  border-style: solid;
+  border-color: #1a8cff;
+  border-right-width: 4px;
+  height: 22px;
+} */
+
+.conditional-statement-header{
+  padding: 10px 0px;
+}
+
+.draggablebox{
+  cursor: move;
+}
+
+.draggablebox.over{
+  border: 2px dashed #000;
+}
+
+/* .conditionalline{
+  border: 2px dashed #000;
+} */
+
+/* container::before{
+  border:2px;
+} */
+
+/* #removeconditionalbtn{
+  padding: 5px;
+}
+#addrulebtn{
+  padding: 5px;
+}
+#addgroupbtn{
+  padding: 5px;
+} */
+
+
+/* draggable targets */
+
+/* drop target state */
+[data-draggable="target"][aria-dropeffect="move"]
+{
+  border-color:#68b;
+  background:#fff;
+}
+
+/* drop target focus and dragover state */
+[data-draggable="target"][aria-dropeffect="move"]:focus,
+[data-draggable="target"][aria-dropeffect="move"].dragover
+{
+  outline:none;
+  box-shadow:0 0 0 1px #fff, 0 0 0 3px #68b;
+}
+
+/* draggable items */
+
+/* items focus state */
+[data-draggable="item"]:focus
+{
+  outline:none;
+
+  box-shadow:0 0 0 2px #e6e6e6, inset 0 0 0 1px #ddd;
+}
+
+/* items grabbed state */
+[data-draggable="item"][aria-grabbed="true"]
+{
+  background:#e6e6e6;
+  color:#fff;
+}
+
+#conditiontext{
+  margin: 3px 3px;
+}
+#deletestatementbtn{
+  margin: 3px 3px;
+}
+#dropdownMenuButton{
+  margin: 3px 3px;
+}
+
+
+#querypreview{
+  margin: 30px 10px 0px 10px;
+}
+
+.totalsubmit{
+  padding: 2em 0em 6em 0em;
+}
+
+.calendaricon{
+  font-size: 24px;
+}
+
+.deleteicon{
+  font-size: 22px;
+  float: right;
+  color: #e60000;
+}
+
+.checkboxicon{
+  font-size: 20px;
+  float: left;
+  /* vertical-align: bottom; */
+  margin-right: 15px;
+}
+
+.checkedboxicon{
+  font-size: 20px;
+  float: left;
+  margin-right: 15px;
+}
+
+.variableinfoicon{
+  font-size: 14px;
+}
+
+.variableinfobtn{
+  background-color: white;
+  float: right;
+}
+
+.manualicon{
+  font-size: 14px;
+}
+
+.manualbtn{
+  display: table-cell;
+  vertical-align: top;
+  margin: 7px;
+}
+
+
+/* .manualbtn:before {
+    content: "";
+    display: block;
+    background: material-icons description;
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin: 0 6px 0 0;
+} */
+
+#content{
+  /* margin: 0em 10em 20em 0em; */
+}
+
+#header{
+  background-color: #01407c;
+}
+
+header h3{
+  color: white;
+  font-size: 32px;
+  padding: 7px 0px;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+@media (max-width: 767px) {
+  header h3 {
+    display: none;
+  }
+}
+
+#logo{
+  width: 300px;
+  padding: 0px 0px 0px 0px;
+}
+#search{
+  padding: 10px;
+}
+
+.nav-link.active{
+  background-color: #e6e6e6;
+}
+/* #headertext a:hover{
+  text-decoration: none; !impotant
+} */
+
+.step{
+  padding: 30px 0px;
+}
+
+.group-box{
+  vertical-align: end;
+}
+
+/* .disabled{
+  cursor: not-allowed;
+} */
+
+.companycode{
+  margin: 0px 7px 0px 0px;
+}
+
+
+
+#full-page-container{
+  margin: 20px auto 100px auto;
+}
+
+#outputleft{
+  padding: 40px 40px;
+  text-align: right;
+}
+
+#outputright{
+  padding: 40px 40px;
+}
+
+#whole-conditional-statements-box{
+  display: none;
+}

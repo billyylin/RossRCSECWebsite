@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block head %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+  <title>Home - Research Computing SEC Filing Database</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="shortcut icon" href="http://vpcomm.umich.edu/brand/favicon.ico"/>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css" rel="stylesheet">
+  <link href="/static/css/index.css" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+
+</head>
+{% endblock %}
+
+
+{% block content %}
+<body>
+  <header id="header">
+    <div class="media align-items-end">
+      <div class="row">
+      <a href="{{url_for('index')}}"><img class="align-self-start mr-3" src="{{url_for('static', filename='Rosslogo.png')}}" id="logo" alt="ross logo"></a>
+    </div>
+      <div class="media-body">
+        <h3>SEC Database</h3>
+      </div>
+  </div>
+  </header>
+
+  {% block body %} {% endblock %}
+  <div class="row jumbotron justify-content-md-center no-gutters" id="introduction">
+    <h1 class="display-4">SEC Filing</h1>
+    <p class="lead">
+      The SEC Analytics Suite attempts to satisfy a growing demand in academia and industry research communities to have a unified platform with necessary resources and tools to data-mine and analyze financial and non-financial firm-related information that is not systematically retrieved and provided to academia by data vendors.
+    </p>
+
+    <a href="{{url_for('manuals')}}"><button class="btn btn-outline-primary btn" role="button">Manuals and Overviews</button></a>
+
+  </div>
+
+  <div class="container" id="content">
+    <div class="row justify-content-center">
+                <div class="card col-md-3">
+                  <div class="card-body row justify-content-center">
+                    <h5 class="card-title">SEC Filings Index</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="{{url_for('sec_filing')}}" class="btn btn-primary">Go to the database</a>
+                  </div>
+                </div>
+                <div class="card col-md-3">
+                    <div class="card-body row justify-content-center">
+                      <h5 class="card-title">SEC Filing Search</h5>
+                      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                      <a href="{{url_for('sec_Filing_Search')}}" class="btn btn-primary">Begin Search</a>
+                    </div>
+                  </div>
+                <div class="card col-md-3">
+                  <div class="card-body row justify-content-center">
+                    <h5 class="card-title">List of Filings Exihibits</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="{{url_for('sec_exhibits')}}" class="btn btn-primary">Go to the database</a>
+                  </div>
+                </div>
+                <div class="card col-md-3">
+                  <div class="card-body row justify-content-center">
+                    <h5 class="card-title">List of 8K Items</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="{{url_for('sec_eightkitem')}}" class="btn btn-primary">Go to the database</a>
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                  
+
+                </div>
+                
+</div>
+
+
+</body>
+
+{% endblock %}
+
+</html>

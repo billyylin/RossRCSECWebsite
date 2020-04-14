@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+
+<!--- look at base.html and find variables to find out what each variable does --->
+<!--- start defining variables --->
+
+{% set title = "List of Filings Exhibits - Research Computing SEC Filing Database" %}
+{% set cssFile = "exhibits.css" %}
+{% set activeExhibits = "active" %}
+
+<!---- end defining variables --->
+{% block url %}
+        <li class="breadcrumb-item active" aria-current="page"><a href="{{url_for('sec_exhibits')}}">List of Filings Exhibits</a></li>
+{% endblock %}
+
+<!--- starting content  --->
+{% block content %}
+
+        <form method="POST"  action="{{ url_for('exhibitsoutput', output_number=output_number) }}">
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="queryform" role="tabpanel" aria-labelledby="queryform-tab">
+
+            <div class="step">
+              <h4>Step 1: Choose your date range.</h4>
+
+              <div class="container">
+              Date Variable:
+                <select class="custom-select" id="inputGroupSelect01" name="date_variable">
+                  <option selected name="date_variable" value="filingdate">Filing Date</option>
+                  <option name="date_variable" value="reportdate">Report Date</option>
+                </select>
+              </div>
+              <br/>
+              <div class="container">
+                  Start Date: <input id="startDate" name = "startdate" width="276" placeholder="dd/mm/yyyy"/>
+                  End Date: <input id="endDate" name = "enddate" width="276" placeholder="dd/mm/yyyy"/>
+              </div>
+    <script>
+    var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    $('#startDate').datepicker({
+        uiLibrary: 'bootstrap4',
+        iconsLibrary: 'fontawesome',
+        maxDate: today
+    });
+    $('#endDate').datepicker({
+        uiLibrary: 'bootstrap4',
+        iconsLibrary: 'fontawesome',
+        minDate: function () {
+            return $('#startDate').val();
+        }
+      });
+    </script>
+
+    </div>
+
+            <hr>
+
+            <div class="step">
+              <h4>Step 2: Apply your company codes.</h4>
+=
+                <input type="radio" name="CompanyCode" value="cik"  checked> CIK
+
+
+              <h5>Select an option for entering company codes</h5>
+
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                        <input type="radio" name="providecompanycode" value="EnterInCompanyCode" id ="enter_code" aria-label="Radio button for following text input" checked>
+                        </div>
+                      </div>
+                      <input type="text" name="company_code_user_putin" class="form-control companycode" aria-label="Text input with radio button" placeholder="Enter in Company Codes">
+                    </div>
+                    <script>
+                    </script>
+
+                <div class="col-md-12">
+                <p>Please enter Company codes separated by a space. Example: [CIK] 0000040545 0000310158 0000320193, or [TICKER] GE MRK AAPL
+                </p>
+                </div>
+
+
+                <script>
+                $(document).ready(function(){
+                  selected_value = $("input[name='enteringcompnaycode']:checked").val();
+                  $('#enteringcompnaycode').change(function() {
+                      if ($selected_value=='use-company-code') {
+                          $('#codelistname-text').prop('disabled', true);
+                          $('#codelistname-checkbox').prop('disabled',true);
+                      }
+                      else if (selected_value=='choosefile') {
+                          $('#codelistname-text').prop('disabled', false);
+                      }
+                  });
+                });
+                </script>
+                        <script>
+                        </script>
+
+                <div class="input-group-text">
+                <input type="radio" name="providecompanycode" value="SelectEntireDatabase" aria-label="Radio button for following text input"> &emsp;&ensp;Select Entire Database
+                </div>
+                <p>This method allows you to search the entire database of records. Please be aware that this method can take a very long time to run because it is dependent upon the size of the database.</p>
+
+              </div>
+
+              <hr>
+
+              <div class="step">
+                <h4>Step 3: About Form.</h4>
+                  <h4>What forms would you like to include?</h4>
+                    Select the forms you would like to include
+                    <select class="custom-select" id="form_type" name="form_type" multiple>
+                      <option value="10-K">10-K - Annual Report Pursuant to Section 13 and 15(d)</option>
+                      <option value="10-Q">10-Q - Quarterly Report Pursuant to Section 13 or 15(d)</option>
+                      <option value="3">3 - Initial Statement of Beneficial Ownership of Securities</option>
+                      <option value="4">4 - Statement of Changes in Beneficial Ownership of Securities</option>
+                      <option value="5">5 - Annual Statement of Changes in Beneficial Ownership of Securities</option>
+                      <option value="497">497 - Definitive Materials Filed under Paragraph (a), (b), (c), (d), (e) or (f) of Securities Act Rule 497</option>
+                      <option value="6-K">6-K - Current Report of Foreign Issuer Pursuant to Rules 13a-16 and 15d-16 Amendments</option>
+                      <option value="8-K">8-K - Current Report Filing</option>
+                      <option value="SC 13D">SC 13D - Schedule Filed to Report Acquisition of Beneficial Ownership of 5% or More of a Class of Equity Securities</option>
+
+                      <option value="424B3">424B3 - Prospectus Filed Pursuant to Rule 424(b)(3)</option>
+                      <option value="13F-HR">13F-HR - Initial Quarterly Form 13F Holdings Report Filed by Institutional Manager</option>
+
+                      <option value="10SB12G">10SB12G</option>
+
+                    </select>
+                </div>
+
+
+
+
+
+
+              <hr>
+
+              <div class="step">
+                <h4>Step 4: Query Variables.</h4>
+
+            <!-- Modal -->
+            <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#queryvariablePopup">
+            <a>How does this work?</a>
+            </button>
+
+            <div class="modal fade" id="queryvariablePopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">How does this work</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+              The purpose of the variable selector is to make it easier to manage the many variables that you frequently need to navigate in order to make a WRDS Query.
+              To add items
+              Check the item in the list on the left. Alternately, you can just check all of the items with the "Check All" option.
+              To remove items
+              Uncheck the item in the list on the left. Or uncheck the item in the list on the right. Alternately, you can just uncheck all of the items with the "Uncheck All" option.
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+            </div>
+
+                  <div class="queryvariables">
+                    <p>Data Items</p>
+                    <div class="row">
+                      <div class="col-md-6">
+                          <span>Select</span>
+                          <button type="button" class="btn btn-outline-dark btn-sm" id="selectallbtn">Select All</button>
+                          <script>
+
+                          </script>
+                        <hr>
+                        <!-- search的框 -->
+                            <script>
+
+                            </script>
+                            <div class="list-group" id="mainItem">
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Filing Date</a>
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Conformed Period of Report or Fiscal Period End</a>
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>SEC Form</a>
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Company Name</a>
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Reference Name of Complete Report Filing</a>
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Complete Report File Size</a>
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>SEC Acceptance Date</a>
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>SEC Acceptance Time</a>
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Exhibit Sequence Number</a>
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Exhibit Type</a>
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Exhibit Description</a>
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action mainitemmark"><i class='material-icons checkboxicon'>check_box_outline_blank</i>Exhibit Reference Filename</a>
+                          </div>
+
+                      </div>
+                      <div class="col-md-6">
+                        <span>Selected</span>
+                        <button type="button" class="btn btn-outline-dark btn-sm" id="clearallbtn">Clear All</button>
+                        <script>
+
+                        </script>
+                      <hr>
+                        <div class="list-group" id="selectedItem">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+
+
+<!-- ####################################################################################################################################
+####################################################################################################################################
+
+####################################################################################################################################
+#################################################################################################################################### -->
+
+              <div>
+              <script>
+
+              </script>
+
+              <hr>
+
+              <div class="step">
+                <h4>Step 5: Select Query Output.</h4>
+                <p>Select the desired format of the output file. For large data requests, select a compression type to expedite downloads. If you enter your email address, you will receive an email that contains a URL to the output file when the data request is finished processing.</p>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>Output Format</p>
+
+                      <input type="radio" name="outputformat" id='csv' value="csv" checked="checked"> comma-delimited text (*.csv) <br>
+                  </div>
+                 </div>
+
+            </div>
+
+            <div class="totalsubmit">
+
+              <input type="hidden" name="selected_variable" id="selected_variable">
+              <button type="submit" class="btn btn-primary" id="final_submit" type="submit">Submit Query</button>
+              <script>
+
+              </script>
+            </div>
+
+            </div>
+          </div>
+<!-- ########################################################################################### -->
+          <div class="tab-pane fade sub-tab" id="variabledesc" role="tabpanel" aria-labelledby="variabledesc-tab">
+              <h4>SEC Analytics Suite - Comprehensive Daily and Quarterly SEC Filings Index</h4>
+              <table class="table">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Library:</td>
+                    <td>sec</td>
+                  </tr>
+                  <tr>
+                    <td>File:</td>
+                    <td>forms</td>
+                  </tr>
+                  <tr>
+                    <td>Data Range:</td>
+                    <td>1994-01-01 - {{ date_latest }}</td>
+                  </tr>
+                  <tr>
+                    <td>Update Schedule:</td>
+                    <td>Daily</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <h4>Variable Reference</h4>
+              <table class="table">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Variable Name</th>
+                    <th scope="col">Data Type</th>
+                    <th scope="col">Variable Description</th>
+                    <th scope="col">Detail</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for ele in variable_description_list %}
+                  <tr>
+                    <td>{{ ele.variable_name }}</td>
+                    <td>{{ ele.data_type }}</td>
+                    <td>{{ ele.description }}</td>
+                    {% if ele.detail %}
+                    <td><a data-toggle="modal" data-target="#exampleModal"><i class="material-icons">description</i></a></td>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Modal title{{ ele.variable_name }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            {{ ele.detail }}
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                  </tr>
+
+
+                </tbody>
+              </table>
+
+
+          </div>
+<!-- ########################################################################################### -->
+          <div class="tab-pane fade sub-tab" id="manuals" role="tabpanel" aria-labelledby="manuals-tab">
+            <h4>SEC Analytics Suite</h4>
+            <div class="container form-inline">
+              <div class="col-md-6 manuallist">
+                <a class="btn btn-outline-primary btn manualbtn" href="{{ url_for('static', filename='Manual_Test.pdf') }}" role="button" target="blank">SEC Analytics Suite Manual</a>
+               </div>
+              <div class="col-md-6 manuallist">
+                <a class="btn btn-outline-primary btn manualbtn" href="{{ url_for('static', filename='Manual_Test.pdf') }}" role="button" target="blank">SEC Analytics Suite Dataset List</a>
+              </div>
+              <div class="col-md-6 manuallist">
+                <a class="btn btn-outline-primary btn manualbtn" href="{{ url_for('static', filename='Manual_Test.pdf') }}" role="button" target="blank">SEC Forms List</a>
+              </div>
+              <div class="col-md-6 manuallist">
+                <a class="btn btn-outline-primary btn manualbtn" href="{{ url_for('static', filename='Manual_Test.pdf') }}" role="button" target="blank">Overview of the Filings Exihibits Data</a>
+              </div>
+              <div class="col-md-6 manuallist">
+                <a class="btn btn-outline-primary btn manualbtn" href="{{ url_for('static', filename='Manual_Test.pdf') }}" role="button" target="blank">Overview of Form 8-K Item Data</a>
+               </div>
+            </div>
+          </div>
+
+<!-- ########################################################################################### -->
+
+          <div class="tab-pane fade sub-tab" id="datasetlist" role="tabpanel" aria-labelledby="datasetlist-tab">
+
+            <h4>Variables</h4>
+            <table class="table">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Index</th>
+                  <th scope="col">Variable Name</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Length</th>
+                  <th scope="col">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in variable_list %}
+                <tr>
+                  <td>{{ item.index }}</td>
+                  <td>{{ item.variable_name }}</td>
+                  <td>{{ item.type }}</td>
+                  <td>{{ item.length }}</td>
+                  <td>{{ item.description }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+
+          </div>
+<!-- ########################################################################################### -->
+
+</body>
+<!--- ending content --->
+{% endblock %}
+
+</html>
